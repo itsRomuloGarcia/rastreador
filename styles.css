@@ -40,7 +40,7 @@ header {
 }
 
 .search-container {
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -122,7 +122,7 @@ header {
 
 /* Badges */
 .badge {
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.3px;
   padding: 6px 12px;
   color: white !important;
@@ -263,7 +263,7 @@ input:checked + .slider:before {
 }
 
 .theme-text {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-color);
 }
 
