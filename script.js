@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // URL da API do Google Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycby1mceHVRe-1rHL5C51EjRZ8zbQO-pD1e9Tqz9rof9I_XcdEha8XtRZ2X-vqszotTOcvw/exec";
+    "https://script.google.com/macros/s/AKfycbwnW-1bVE-XoeVVgrMLcCRFmGij95ZZkKyNHBGDqviTX2tvVx4_ZDoxWh1JRWHE6Nyw8g/exec";
 
   // Máscara dinâmica para CPF/CNPJ
   docInput.addEventListener("input", function (e) {
