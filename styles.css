@@ -20,7 +20,6 @@
   --result-text-color: #e9ecef;
 }
 
-/* Estilos Gerais */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-color);
@@ -29,7 +28,6 @@ body {
   padding-bottom: 60px;
 }
 
-/* Header */
 header {
   background-color: var(--card-bg);
   border-radius: 10px;
@@ -44,7 +42,6 @@ header {
   margin: 0 auto;
 }
 
-/* Cards */
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -57,7 +54,6 @@ header {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Result Card - Específico */
 .result-card {
   border-radius: 12px;
   overflow: hidden;
@@ -93,7 +89,6 @@ header {
   padding: 25px;
 }
 
-/* Itens de Resultado */
 .result-item {
   margin-bottom: 12px;
   display: flex;
@@ -120,7 +115,6 @@ header {
   color: var(--primary-color);
 }
 
-/* Badges */
 .badge {
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -128,7 +122,6 @@ header {
   color: white !important;
 }
 
-/* Botões */
 .btn-primary {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
@@ -148,19 +141,16 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Loading */
 .loading-container {
   text-align: center;
   padding: 40px 0;
 }
 
-/* Not Found */
 .not-found-container .card {
   max-width: 500px;
   margin: 0 auto;
 }
 
-/* Footer */
 .footer {
   position: fixed;
   bottom: 0;
@@ -210,7 +200,6 @@ header {
   transform: translateY(-2px);
 }
 
-/* Theme Switch */
 .theme-switch-wrapper {
   display: flex;
   align-items: center;
@@ -267,7 +256,6 @@ input:checked + .slider:before {
   color: var(--text-color);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   body {
     padding-bottom: 70px;
@@ -297,7 +285,6 @@ input:checked + .slider:before {
   }
 }
 
-/* Animações */
 @keyframes fadeIn {
   from {
     opacity: 0;
