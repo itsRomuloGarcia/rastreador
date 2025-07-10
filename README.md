@@ -1,6 +1,6 @@
-# 🚚 Sistema de Rastreamento iFood - Integração com Google Sheets
+# Sistema de Rastreamento iFood - Integração com Google Sheets
 
-## 📌 Visão Geral
+## Visão Geral
 
 Solução completa para rastreamento interno de pedidos, utilizando:
 
