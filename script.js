@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Elementos DOM
+  
   const docInput = document.getElementById("docInput");
   const searchBtn = document.getElementById("searchBtn");
   const loading = document.getElementById("loading");
@@ -8,22 +8,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const themeSwitch = document.getElementById("checkbox");
   const themeText = document.querySelector(".theme-text");
 
-  // URL da API do Google Apps Script
+  // URL da API Apps Script
   const API_URL =
     "https://script.google.com/macros/s/AKfycbwnW-1bVE-XoeVVgrMLcCRFmGij95ZZkKyNHBGDqviTX2tvVx4_ZDoxWh1JRWHE6Nyw8g/exec";
 
-  // Máscara dinâmica para CPF/CNPJ
+  
   docInput.addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
 
     if (value.length <= 11) {
-      // CPF
+      
       value = value
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
     } else {
-      // CNPJ
+      
       value = value
         .replace(/^(\d{2})(\d)/, "$1.$2")
         .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
     e.target.value = value;
   });
 
-  // Validação de documento
   function validateDocument(doc) {
     const cleaned = doc.replace(/\D/g, "");
     return {
@@ -44,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Event Listeners
   docInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") searchOrder();
   });
@@ -52,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
   searchBtn.addEventListener("click", searchOrder);
   themeSwitch.addEventListener("change", toggleTheme);
 
-  // Função principal de busca
   function searchOrder() {
     const { type, isValid, cleaned } = validateDocument(docInput.value);
 
@@ -71,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchOrderData(cleaned, type);
   }
 
-  // Busca na API
   async function fetchOrderData(docNumber, docType) {
     try {
       const response = await fetch(
@@ -99,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Exibe resultados
   function displayOrderData(order) {
     document.getElementById("pedido").textContent = order.pedido || "N/A";
     document.getElementById("razaoSocial").textContent =
@@ -130,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
     showResults();
   }
 
-  // Auxiliares de UI
   function showLoading() {
     loading.classList.remove("d-none");
     resultContainer.classList.add("d-none");
@@ -180,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Utilitários
   function formatDate(dateString) {
     if (!dateString) return null;
     const date = new Date(dateString);
@@ -204,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }
 
-  // Inicialização
   if (localStorage.getItem("theme") === "light") {
     themeSwitch.checked = true;
     toggleTheme();
