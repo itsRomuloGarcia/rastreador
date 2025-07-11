@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // URL da API Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbyyM8x9uCmWwiC9BOuAcG_lWVsa5Up3gJZk9Txy-qQ_8BxQXrdMkFxATjMIrHkxKwGEgQ/exec";
+    "https://script.google.com/macros/s/AKfycbwOhvsVdODuHvYlVXhk99sDUkjbSA7mbh2XwpOEzSJAoGfMbWWo5z4GPTavSf1n-B0vrg/exec";
 
   docInput.addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
