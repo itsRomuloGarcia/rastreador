@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  
   const docInput = document.getElementById("docInput");
   const searchBtn = document.getElementById("searchBtn");
   const loading = document.getElementById("loading");
@@ -10,20 +9,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // URL da API Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbwm74-wNbZK9x_IYJs4NfnxIUdxRTXU0fhbMrSw3-6iuxaFhm92k7Fj_FFXxn_v4qsN_A/exec";
+    "https://script.google.com/macros/s/AKfycbyyM8x9uCmWwiC9BOuAcG_lWVsa5Up3gJZk9Txy-qQ_8BxQXrdMkFxATjMIrHkxKwGEgQ/exec";
 
-  
   docInput.addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
 
     if (value.length <= 11) {
-      
       value = value
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
     } else {
-      
       value = value
         .replace(/^(\d{2})(\d)/, "$1.$2")
         .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
