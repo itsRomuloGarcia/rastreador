@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // URL da API Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbzX_EIsCm6ZXYyEYxs6VUFFKYOXy_iKe5T0QICvMDN6gVwklY0pV8jxdQvQRjVLEedelg/exec";
+    "https://script.google.com/macros/s/AKfycbwm74-wNbZK9x_IYJs4NfnxIUdxRTXU0fhbMrSw3-6iuxaFhm92k7Fj_FFXxn_v4qsN_A/exec";
 
   
   docInput.addEventListener("input", function (e) {
