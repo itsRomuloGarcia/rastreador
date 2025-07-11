@@ -304,3 +304,81 @@ input:checked + .slider:before {
   font-size: 2rem;
   font-weight: 600;
 }
+.comprovante-unavailable {
+  background: transparent !important;
+  border: 1px solid #eee !important; /* borda quase invisível */
+  border-radius: 4px !important;
+  padding: 10px !important;
+}
+
+/* Adicione isso para manter o ícone e texto alinhados */
+.comprovante-unavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.comprovante-unavailable i {
+  font-size: 2.5rem !important;
+  color: #dc3545 !important;
+}
+
+.comprovante-error-content i {
+  font-size: 2rem;
+  color: #ff6b6b;
+  margin-bottom: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+.comprovante-error-content h5 {
+  color: #d63031;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.comprovante-unavailable h5 {
+  margin: 0 !important;
+  font-size: 1.2rem !important;
+  color: #333 !important;
+}
+
+.dark-mode .comprovante-unavailable h5 {
+  color: #f8f9fa !important;
+}
+
+.comprovante-error-content p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Dark Mode */
+body.dark-mode .comprovante-unavailable {
+  background-color: #2d3436;
+  border-left-color: #e84393;
+}
+
+body.dark-mode .comprovante-error-content i {
+  color: #e84393;
+}
+
+body.dark-mode .comprovante-error-content h5 {
+  color: #fd79a8;
+}
+
+body.dark-mode .comprovante-error-content p {
+  color: #b2bec3;
+}

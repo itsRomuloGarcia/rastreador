@@ -17,6 +17,59 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link href="styles.css" rel="stylesheet" />
+    <style>
+      /* Estilos melhorados para a área de comprovantes */
+      .comprovante-container {
+        margin-top: 1.5rem;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .comprovante-view {
+        height: 500px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+        display: none; /* Inicialmente oculto */
+      }
+
+      .comprovante-placeholder {
+        padding: 2rem;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+      }
+
+      .comprovante-unavailable {
+        padding: 2rem;
+        text-align: center;
+        background-color: #fff8f8;
+        border: 2px dashed #ffcccc;
+        border-radius: 8px;
+        display: none; /* Inicialmente oculto */
+      }
+
+      .comprovante-unavailable i {
+        color: #dc3545;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .comprovante-unavailable h5 {
+        color: #dc3545;
+        margin-bottom: 0.5rem;
+      }
+
+      #comprovanteIframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    </style>
   </head>
   <body class="dark-mode">
     <div class="container-fluid">
@@ -44,7 +97,6 @@
               <i class="fas fa-search"></i> Pesquisar
             </button>
           </div>
-         
         </div>
       </header>
 
@@ -96,7 +148,6 @@
                   </div>
                 </div>
 
-                
                 <div class="col-md-6">
                   <div class="result-item">
                     <strong
@@ -137,7 +188,6 @@
                 </div>
               </div>
 
-              
               <div class="row mt-4">
                 <div class="col-md-6">
                   <div class="result-item">
@@ -158,9 +208,34 @@
               </div>
 
               
-              <div class="text-center mt-4">
-                <button id="downloadBtn" class="btn btn-success">
-                  <i class="fas fa-download me-2"></i>BAIXAR COMPROVANTE
+
+                <!-- Estado Inicial (Placeholder) -->
+                <div
+                  id="comprovantePlaceholder"
+                  class="comprovante-placeholder"
+                >
+                  <i class="fas fa-file-pdf fa-3x mb-3"></i>
+                  <p>O comprovante será exibido aqui</p>
+                </div>
+
+                <!-- Visualização do Comprovante (se disponível) -->
+                <div id="comprovanteView" class="comprovante-view">
+                  <iframe id="comprovanteIframe"></iframe>
+                </div>
+
+                <!-- Mensagem de Indisponibilidade -->
+                <div
+                  id="comprovanteUnavailable"
+                  class="comprovante-unavailable">
+                  <i class="fas fa-times-circle"></i>
+                 <h5>Comprovante não disponível</h5>
+                </div>
+              </div>
+
+              <!-- Botão de Download Alternativo -->
+              <div class="text-center mt-3">
+                <button id="downloadBtn" class="btn btn-outline-primary">
+                  <i class="fas fa-download me-2"></i>BAIXAR CÓPIA
                 </button>
               </div>
             </div>
@@ -172,7 +247,9 @@
             <div class="card-body text-center">
               <i class="fas fa-box-open fa-4x mb-3"></i>
               <h3>Nenhum pedido encontrado</h3>
-              <p>Não foi possível localizar um pedido com o CNPJ informado.</p>
+              <p>
+                Não foi possível localizar um pedido com o documento informado.
+              </p>
             </div>
           </div>
         </div>

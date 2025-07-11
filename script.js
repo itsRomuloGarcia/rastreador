@@ -6,11 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const notFound = document.getElementById("notFound");
   const themeSwitch = document.getElementById("checkbox");
   const themeText = document.querySelector(".theme-text");
+  const comprovanteContainer = document.getElementById("comprovanteContainer"); // Novo elemento para o iframe
 
   // URL da API Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbwOhvsVdODuHvYlVXhk99sDUkjbSA7mbh2XwpOEzSJAoGfMbWWo5z4GPTavSf1n-B0vrg/exec";
+    "https://script.google.com/macros/s/AKfycbyrVAAv3rwOZwTrVbQVPRuOX75Nfqz4MpNza0o1Y5Yms4J8gmYayBqJgaBQs6PZFetqbw/exec";
 
+  // Formata CPF/CNPJ durante a digitação
   docInput.addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
 
@@ -30,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.target.value = value;
   });
 
+  // Valida documento (CPF/CNPJ)
   function validateDocument(doc) {
     const cleaned = doc.replace(/\D/g, "");
     return {
@@ -39,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
+  // Busca ao pressionar Enter
   docInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") searchOrder();
   });
@@ -46,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   searchBtn.addEventListener("click", searchOrder);
   themeSwitch.addEventListener("change", toggleTheme);
 
+  // Função principal de busca
   function searchOrder() {
     const { type, isValid, cleaned } = validateDocument(docInput.value);
 
@@ -64,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchOrderData(cleaned, type);
   }
 
+  // Busca os dados na API
   async function fetchOrderData(docNumber, docType) {
     try {
       const response = await fetch(
@@ -91,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Exibe os dados do pedido
   function displayOrderData(order) {
     document.getElementById("pedido").textContent = order.pedido || "N/A";
     document.getElementById("razaoSocial").textContent =
@@ -117,10 +124,47 @@ document.addEventListener("DOMContentLoaded", function () {
     statusBadge.textContent = order.status || "N/A";
     updateStatusBadge(statusBadge, order.status);
 
-    setupDownloadButton(order.comprovante);
+    setupComprovanteView(order.comprovante); // Alterado para visualização
     showResults();
   }
 
+  function setupComprovanteView(comprovanteUrl) {
+    const placeholder = document.getElementById("comprovantePlaceholder");
+    const view = document.getElementById("comprovanteView");
+    const unavailable = document.getElementById("comprovanteUnavailable");
+    const iframe = document.getElementById("comprovanteIframe");
+
+    // Resetar todos os estados
+    placeholder.style.display = "none";
+    view.style.display = "none";
+    unavailable.style.display = "none";
+
+    if (comprovanteUrl) {
+      try {
+        const viewUrl = getViewUrl(comprovanteUrl);
+        iframe.src = viewUrl;
+        view.style.display = "block";
+      } catch (e) {
+        unavailable.style.display = "flex";
+      }
+    } else {
+      unavailable.style.display = "flex";
+    }
+  }
+
+  // Converte URL para visualização
+  function getViewUrl(driveUrl) {
+    if (!driveUrl) return null;
+
+    // Extrai o ID do arquivo do Google Drive
+    const match = driveUrl.match(/[-\w]{25,}/);
+    if (!match) return driveUrl; // Se não for do Drive, mantém o original
+
+    const fileId = match[0];
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+
+  // Funções auxiliares (mantidas do original)
   function showLoading() {
     loading.classList.remove("d-none");
     resultContainer.classList.add("d-none");
@@ -158,32 +202,12 @@ document.addEventListener("DOMContentLoaded", function () {
     else element.classList.add("bg-danger");
   }
 
-  function setupDownloadButton(comprovanteUrl) {
-    const btn = document.getElementById("downloadBtn");
-
-    if (comprovanteUrl) {
-      btn.onclick = () => window.open(fixDriveUrl(comprovanteUrl), "_blank");
-      btn.disabled = false;
-    } else {
-      btn.disabled = true;
-      btn.setAttribute("title", "Comprovante não disponível");
-    }
-  }
-
   function formatDate(dateString) {
     if (!dateString) return null;
     const date = new Date(dateString);
     return isNaN(date.getTime())
       ? dateString
       : date.toLocaleDateString("pt-BR");
-  }
-
-  function fixDriveUrl(url) {
-    if (!url) return "";
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    return match
-      ? `https://drive.google.com/uc?export=download&id=${match[1]}`
-      : url;
   }
 
   function toggleTheme() {
@@ -193,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }
 
+  // Inicialização
   if (localStorage.getItem("theme") === "light") {
     themeSwitch.checked = true;
     toggleTheme();
