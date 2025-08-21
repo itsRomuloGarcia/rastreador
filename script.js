@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // URL da API Apps Script
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbyrVAAv3rwOZwTrVbQVPRuOX75Nfqz4MpNza0o1Y5Yms4J8gmYayBqJgaBQs6PZFetqbw/exec";
+    "https://script.google.com/macros/s/AKfycbzo0eG0J8wy027S6-aZH5CqpEV4XZWWRNG1RuPspm3TdBFUTsSHjvV5IBvrKI842YPw/exec";
 
   // Formata CPF/CNPJ durante a digitação
   docInput.addEventListener("input", function (e) {
@@ -223,3 +223,4 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleTheme();
   }
 });
+
