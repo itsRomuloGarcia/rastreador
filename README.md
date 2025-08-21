@@ -4,7 +4,7 @@
 
 Solução completa para rastreamento interno de pedidos, utilizando:
 
-- **Backend**: Google Apps Script (API robusta)
-- **Frontend**: HTML/CSS/JS moderno
+- **Backend**: Google Apps Script
+- **Frontend**: HTML/CSS/JS
 - **Banco de Dados**: Google Sheets
 - **Armazenamento**: Google Drive (comprovantes)
