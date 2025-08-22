@@ -1,3 +1,6 @@
+// Variável global para armazenar todos os dados
+let allOrdersData = [];
+
 document.addEventListener("DOMContentLoaded", function () {
   const docInput = document.getElementById("docInput");
   const searchBtn = document.getElementById("searchBtn");
@@ -6,13 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const notFound = document.getElementById("notFound");
   const themeSwitch = document.getElementById("checkbox");
   const themeText = document.querySelector(".theme-text");
-  const comprovanteContainer = document.getElementById("comprovanteContainer"); // Novo elemento para o iframe
 
-  // URL da API Apps Script
+  // URL da API Apps Script (agora carrega todos os dados)
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbzo0eG0J8wy027S6-aZH5CqpEV4XZWWRNG1RuPspm3TdBFUTsSHjvV5IBvrKI842YPw/exec";
+    "https://script.google.com/macros/s/AKfycbwARJ6spZrG8OWzpy2n---8LpHCVoCREDfVI706YhHZzgjGfvlGOfBHrhp_0xYXAFpU/exec"; // Substitua pelo ID correto
 
-  // Formata CPF/CNPJ durante a digitação
   docInput.addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "");
 
@@ -32,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     e.target.value = value;
   });
 
-  // Valida documento (CPF/CNPJ)
   function validateDocument(doc) {
     const cleaned = doc.replace(/\D/g, "");
     return {
@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Busca ao pressionar Enter
   docInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") searchOrder();
   });
@@ -50,7 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
   searchBtn.addEventListener("click", searchOrder);
   themeSwitch.addEventListener("change", toggleTheme);
 
-  // Função principal de busca
+  showLoading();
+  loadAllOrdersData();
+
+  if (localStorage.getItem("theme") === "light") {
+    themeSwitch.checked = true;
+    toggleTheme();
+  }
+
   function searchOrder() {
     const { type, isValid, cleaned } = validateDocument(docInput.value);
 
@@ -65,39 +71,76 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    showLoading();
-    fetchOrderData(cleaned, type);
+    findOrderData(cleaned, type);
   }
 
-  // Busca os dados na API
-  async function fetchOrderData(docNumber, docType) {
-    try {
-      const response = await fetch(
-        `${API_URL}?doc=${docNumber}&type=${docType}`
-      );
+  function loadAllOrdersData() {
+    const callbackName = "handleOrdersData_" + new Date().getTime();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erro na busca");
+    window[callbackName] = function (data) {
+      delete window[callbackName];
+
+      if (data && Array.isArray(data)) {
+        allOrdersData = data;
+        hideLoading();
+        showMessage("Digite um CPF ou CNPJ para pesquisar");
+      } else if (data && data.error) {
+        handleDataError(new Error(data.error));
+      } else {
+        handleDataError(new Error("Formato de dados inválido"));
       }
+    };
 
-      const data = await response.json();
+    const timeoutId = setTimeout(function () {
+      if (window[callbackName]) {
+        delete window[callbackName];
+        handleDataError(new Error("Timeout ao carregar dados"));
+      }
+    }, 15000);
 
-      if (data.error) throw new Error(data.error);
-      if (data.length > 0) displayOrderData(data[0]);
-      else showNotFound();
-    } catch (error) {
-      console.error("Erro:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: error.message || "Falha ao buscar dados",
-      });
-      hideLoading();
-    }
+    const script = document.createElement("script");
+    script.src = `${API_URL}?callback=${callbackName}`;
+
+    script.onerror = function () {
+      clearTimeout(timeoutId);
+      if (window[callbackName]) {
+        delete window[callbackName];
+      }
+      handleDataError(new Error("Erro de conexão ao carregar dados"));
+    };
+
+    document.body.appendChild(script);
   }
 
-  // Exibe os dados do pedido
+  function findOrderData(docNumber, docType) {
+    showLoading();
+
+    setTimeout(() => {
+      try {
+        const fieldToSearch = docType === "CPF" ? "cpf" : "cnpj";
+        const results = allOrdersData.filter(
+          (order) =>
+            order[fieldToSearch] &&
+            order[fieldToSearch].replace(/\D/g, "") === docNumber
+        );
+
+        if (results.length > 0) {
+          displayOrderData(results[0]);
+        } else {
+          showNotFound();
+        }
+      } catch (error) {
+        console.error("Erro na busca local:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Falha ao processar a busca",
+        });
+        hideLoading();
+      }
+    }, 100);
+  }
+
   function displayOrderData(order) {
     document.getElementById("pedido").textContent = order.pedido || "N/A";
     document.getElementById("razaoSocial").textContent =
@@ -124,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
     statusBadge.textContent = order.status || "N/A";
     updateStatusBadge(statusBadge, order.status);
 
-    setupComprovanteView(order.comprovante); // Alterado para visualização
+    setupComprovanteView(order.comprovante);
     showResults();
   }
 
@@ -134,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const unavailable = document.getElementById("comprovanteUnavailable");
     const iframe = document.getElementById("comprovanteIframe");
 
-    // Resetar todos os estados
     placeholder.style.display = "none";
     view.style.display = "none";
     unavailable.style.display = "none";
@@ -152,19 +194,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Converte URL para visualização
   function getViewUrl(driveUrl) {
     if (!driveUrl) return null;
 
-    // Extrai o ID do arquivo do Google Drive
     const match = driveUrl.match(/[-\w]{25,}/);
-    if (!match) return driveUrl; // Se não for do Drive, mantém o original
-
+    if (!match) return driveUrl;
     const fileId = match[0];
     return `https://drive.google.com/file/d/${fileId}/preview`;
   }
 
-  // Funções auxiliares (mantidas do original)
   function showLoading() {
     loading.classList.remove("d-none");
     resultContainer.classList.add("d-none");
@@ -178,11 +216,30 @@ document.addEventListener("DOMContentLoaded", function () {
   function showResults() {
     hideLoading();
     resultContainer.classList.remove("d-none");
+    notFound.classList.add("d-none");
   }
 
   function showNotFound() {
     hideLoading();
     notFound.classList.remove("d-none");
+    resultContainer.classList.add("d-none");
+  }
+
+  function showMessage(message) {
+    hideLoading();
+    notFound.innerHTML = `<div class="text-center p-4"><p>${message}</p></div>`;
+    notFound.classList.remove("d-none");
+    resultContainer.classList.add("d-none");
+  }
+
+  function handleDataError(error) {
+    console.error("Erro ao carregar dados:", error);
+    hideLoading();
+    Swal.fire({
+      icon: "error",
+      title: "Erro de Carregamento",
+      text: "Não foi possível carregar os dados. Por favor, recarregue a página.",
+    });
   }
 
   function updateStatusBadge(element, status) {
@@ -204,10 +261,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function formatDate(dateString) {
     if (!dateString) return null;
-    const date = new Date(dateString);
-    return isNaN(date.getTime())
-      ? dateString
-      : date.toLocaleDateString("pt-BR");
+
+    if (typeof dateString === "string" && dateString.includes("/")) {
+      return dateString;
+    }
+
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime())
+        ? dateString
+        : date.toLocaleDateString("pt-BR");
+    } catch (e) {
+      return dateString;
+    }
   }
 
   function toggleTheme() {
@@ -216,11 +282,4 @@ document.addEventListener("DOMContentLoaded", function () {
     themeText.textContent = isDark ? "Modo Light" : "Modo Dark";
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }
-
-  // Inicialização
-  if (localStorage.getItem("theme") === "light") {
-    themeSwitch.checked = true;
-    toggleTheme();
-  }
 });
-
