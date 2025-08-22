@@ -1,4 +1,4 @@
-# Sistema de Rastreamento iFood - Integração com Google Sheets
+# Sistema de Rastreamento - Integração com Google Sheets e Google Drive (comprovantes)
 
 ## Visão Geral
 
